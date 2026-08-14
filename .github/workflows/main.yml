@@ -35,6 +35,8 @@ jobs:
         mkdir -p build/merged
         cp -r build/classes/java/main/* build/merged/
         cp -r src/main/resources/* build/merged/
+        # 确保 mods.toml 文件名正确（从 modules.toml 重命名）
+        mv build/merged/META-INF/modules.toml build/merged/META-INF/mods.toml || true
         mkdir -p build/libs
         cd build/merged
         zip -r ../libs/colorprefix-1.0.0.jar .
