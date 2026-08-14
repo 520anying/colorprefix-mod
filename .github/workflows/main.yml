@@ -37,4 +37,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Forge-Mod-JAR
-        path: build/libs/*.jar
+        path: build/libs/colorprefix-1.0.0.jar
