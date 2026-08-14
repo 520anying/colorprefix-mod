@@ -20,6 +20,17 @@ archivesBaseName = 'colorprefix'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
 minecraft {
     mappings channel: 'official', version: '1.19.2'
     runs {
@@ -66,4 +77,6 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+    // 确保包含 resources 中的文件
+    from sourceSets.main.resources
 }
