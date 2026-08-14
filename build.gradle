@@ -74,7 +74,5 @@ tasks.register('customJar', Jar) {
     }
 }
 
-// 确保 customJar 在 build 之后执行
-build {
-    dependsOn customJar
-}
+// 确保 build 任务执行 customJar
+tasks.build.dependsOn tasks.customJar
