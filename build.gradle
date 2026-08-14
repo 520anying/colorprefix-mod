@@ -54,11 +54,15 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
 }
 
-// 自定义 jar 任务，强制包含编译后的 class 文件和资源文件
-tasks.jar {
+// 配置 jar 任务，强制包含 class 文件和资源文件
+jar {
+    // 明确指定包含编译后的 class 文件
     from sourceSets.main.output
+    // 包含资源文件
     from sourceSets.main.resources
+    // 处理重复文件（如果 mods.toml 被包含两次，忽略重复）
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    
     manifest {
         attributes([
             "Specification-Title": "colorprefix",
@@ -72,7 +76,7 @@ tasks.jar {
     }
 }
 
-// 确保 reobfJar 使用我们的 jar 输出
+// 确保 reobfJar 使用 jar 任务的输出
 reobf {
     jar {}
 }
