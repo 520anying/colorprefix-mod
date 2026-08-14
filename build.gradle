@@ -54,12 +54,14 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
 }
 
-// 自定义打包任务，直接打包编译后的 class 和资源文件
+// 自定义打包任务
 tasks.register('customJar', Jar) {
     archiveBaseName.set('colorprefix')
     archiveVersion.set('1.0.0')
-    from fileTree('build/classes/java/main')
-    from fileTree('src/main/resources')
+    // 使用 sourceSets.main.output 确保包含所有编译后的 class 文件
+    from sourceSets.main.output
+    // 包含资源文件
+    from sourceSets.main.resources
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes([
