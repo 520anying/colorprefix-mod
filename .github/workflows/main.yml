@@ -35,8 +35,7 @@ jobs:
         mkdir -p build/libs
         cd build/classes/java/main
         zip -r ../../../libs/colorprefix-1.0.0.jar .
-        cd ../../..
-        cd src/main/resources
+        cd ../../../src/main/resources
         zip -u ../../../build/libs/colorprefix-1.0.0.jar .
     
     - name: List build/libs contents
