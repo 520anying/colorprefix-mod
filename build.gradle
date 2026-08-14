@@ -20,17 +20,6 @@ archivesBaseName = 'colorprefix'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java']
-        }
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-    }
-}
-
 minecraft {
     mappings channel: 'official', version: '1.19.2'
     runs {
@@ -65,10 +54,8 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
 }
 
+// 这个任务会把源码和资源打包进 jar
 jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from sourceSets.main.output.classesDirs
-    from sourceSets.main.resources
     manifest {
         attributes([
             "Specification-Title": "colorprefix",
@@ -79,5 +66,15 @@ jar {
             "Implementation-Vendor": "undertaker",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
+    }
+    // 明确包含编译后的 class 文件和资源文件
+    from sourceSets.main.output
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// 确保 reobfJar 使用的是我们生成的 jar
+reobf {
+    jar {
+        // 默认使用 jar 任务的输出
     }
 }
