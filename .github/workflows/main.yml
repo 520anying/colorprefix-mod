@@ -30,6 +30,13 @@ jobs:
     - name: Build with Gradle (compile only)
       run: ./gradlew compileJava processResources
     
+    - name: Find class files
+      run: |
+        echo "=== build/classes/java/main ==="
+        ls -la build/classes/java/main/
+        echo "=== find . -name '*.class' ==="
+        find . -name "*.class" | head -20
+    
     - name: Create mod JAR
       run: |
         mkdir -p build/libs
