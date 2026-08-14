@@ -54,21 +54,13 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
 }
 
-// 显示编译详细信息，便于排查错误
-compileJava {
-    options.compilerArgs << '-Xlint:all'
-    options.encoding = 'UTF-8'
-}
-
-// 打包任务：直接指定 class 文件和资源文件的路径
-jar {
-    // 从编译输出目录获取 class 文件
-    from file('build/classes/java/main')
-    // 从资源目录获取 mods.toml 等
-    from file('src/main/resources')
-    // 处理可能重复的文件
+// 自定义打包任务，直接打包编译后的 class 和资源文件
+tasks.register('customJar', Jar) {
+    archiveBaseName.set('colorprefix')
+    archiveVersion.set('1.0.0')
+    from fileTree('build/classes/java/main')
+    from fileTree('src/main/resources')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    
     manifest {
         attributes([
             "Specification-Title": "colorprefix",
@@ -82,7 +74,7 @@ jar {
     }
 }
 
-// 确保 reobfJar 使用我们配置的 jar 任务
-reobf {
-    jar {}
+// 确保 customJar 在 build 之后执行
+build {
+    dependsOn customJar
 }
