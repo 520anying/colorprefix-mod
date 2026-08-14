@@ -27,24 +27,17 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     
-    - name: Build with Gradle (compile only)
-      run: ./gradlew compileJava processResources
+    - name: Compile Java (no build)
+      run: ./gradlew compileJava
     
-    - name: Find class files
-      run: |
-        echo "=== build/classes/java/main ==="
-        ls -la build/classes/java/main/
-        echo "=== find . -name '*.class' ==="
-        find . -name "*.class" | head -20
+    - name: Copy resources to class directory
+      run: cp -r src/main/resources/* build/classes/java/main/
     
     - name: Create mod JAR
       run: |
-        mkdir -p build/temp
         mkdir -p build/libs
-        cp -r build/classes/java/main/* build/temp/
-        cp -r src/main/resources/* build/temp/
-        cd build/temp
-        zip -r ../libs/colorprefix-1.0.0.jar .
+        cd build/classes/java/main
+        jar cf ../../../libs/colorprefix-1.0.0.jar .
     
     - name: List build/libs contents
       run: ls -la build/libs/
