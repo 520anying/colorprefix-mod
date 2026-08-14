@@ -9,11 +9,9 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.UUID;
-
 public class ChatHandler {
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onServerChat(ServerChatEvent event) {
         if (event.isCanceled()) return;
 
@@ -21,18 +19,13 @@ public class ChatHandler {
             ServerPlayer player = event.getPlayer();
             if (player == null) return;
 
-            UUID playerUUID = getPlayerUUID(player);
-            if (playerUUID == null) return;
-
-            User user = LuckPermsProvider.get().getUserManager().getUser(playerUUID);
+            User user = LuckPermsProvider.get().getUserManager().getUser(player.getUUID());
             if (user == null) return;
 
             String prefix = user.getCachedData().getMetaData().getPrefix();
             if (prefix == null || prefix.isEmpty()) return;
 
             String coloredPrefix = prefix.replace('&', '§');
-            
-            // ✅ 关键修改：用 getDisplayName() 替代 getName()
             MutableComponent finalMsg = Component.literal(coloredPrefix + " ")
                     .append(player.getDisplayName().copy())
                     .append(Component.literal(": "))
@@ -40,29 +33,7 @@ public class ChatHandler {
 
             event.setMessage(finalMsg);
         } catch (Exception e) {
-            System.err.println("❌ [colorprefix] 处理聊天事件时出错: " + e.getMessage());
+            // 静默失败，不影响聊天
         }
-    }
-
-    private UUID getPlayerUUID(ServerPlayer player) {
-        try {
-            return player.getUUID();
-        } catch (NoSuchMethodError e1) {
-            try {
-                Object profile = player.getClass().getMethod("getGameProfile").invoke(player);
-                if (profile != null) {
-                    return (UUID) profile.getClass().getMethod("getId").invoke(profile);
-                }
-            } catch (Exception e2) {
-                try {
-                    java.lang.reflect.Field field = player.getClass().getSuperclass().getDeclaredField("uuid");
-                    field.setAccessible(true);
-                    return (UUID) field.get(player);
-                } catch (Exception e3) {
-                    return null;
-                }
-            }
-        }
-        return null;
     }
 }
