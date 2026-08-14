@@ -80,3 +80,9 @@ jar {
 reobf {
     jar {}
 }
+// 强制 reobfJar 使用我们定义的 jar 文件
+tasks.reobfJar {
+    // 使用 jar 任务的输出作为输入
+    dependsOn jar
+    input = file("build/libs/${archivesBaseName}-${version}.jar")
+}
