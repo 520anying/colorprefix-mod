@@ -21,7 +21,6 @@ public class ChatHandler {
             ServerPlayer player = event.getPlayer();
             if (player == null) return;
 
-            // 获取 UUID
             UUID playerUUID = getPlayerUUID(player);
             if (playerUUID == null) return;
 
@@ -33,7 +32,7 @@ public class ChatHandler {
 
             String coloredPrefix = prefix.replace('&', '§');
             
-            // 使用 getDisplayName() 而不是 getName()
+            // ✅ 关键修改：用 getDisplayName() 替代 getName()
             MutableComponent finalMsg = Component.literal(coloredPrefix + " ")
                     .append(player.getDisplayName().copy())
                     .append(Component.literal(": "))
