@@ -27,20 +27,23 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     
-    - name: Compile Java (no build)
+    - name: Compile Java
       run: ./gradlew compileJava
     
-    - name: Copy resources to class directory
-      run: cp -r src/main/resources/* build/classes/java/main/
-    
-    - name: Create mod JAR
+    - name: Create mod JAR (manually)
       run: |
+        mkdir -p build/merged
+        cp -r build/classes/java/main/* build/merged/
+        cp -r src/main/resources/* build/merged/
         mkdir -p build/libs
-        cd build/classes/java/main
-        jar cf ../../../libs/colorprefix-1.0.0.jar .
+        cd build/merged
+        zip -r ../libs/colorprefix-1.0.0.jar .
     
-    - name: List build/libs contents
-      run: ls -la build/libs/
+    - name: Verify JAR
+      run: |
+        ls -la build/libs/
+        echo "=== JAR contents ==="
+        unzip -l build/libs/colorprefix-1.0.0.jar
     
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
