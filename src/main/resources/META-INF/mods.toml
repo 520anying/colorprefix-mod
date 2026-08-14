@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT"
+
+[[mods]]
+modId="colorprefix"
+version="1.0.0"
+displayName="彩色称号模组"
+authors="undertaker"
+description='''一个基于 LuckPerms 的彩色称号显示模组'''
+
+[[dependencies.colorprefix]]
+modId="forge"
+mandatory=true
+versionRange="[43,44)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.colorprefix]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.19.2,1.20)"
+ordering="NONE"
+side="BOTH"
