@@ -54,8 +54,8 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
 }
 
-// 配置 jar 任务，确保包含编译后的 .class 文件
-jar {
+// 自定义 jar 任务，强制包含编译后的 class 文件和资源文件
+tasks.jar {
     from sourceSets.main.output
     from sourceSets.main.resources
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -72,7 +72,7 @@ jar {
     }
 }
 
-// 配置 reobfJar 任务，确保它基于 jar 任务生成
+// 确保 reobfJar 使用我们的 jar 输出
 reobf {
     jar {}
 }
