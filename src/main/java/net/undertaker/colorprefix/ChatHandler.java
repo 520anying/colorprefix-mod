@@ -22,19 +22,34 @@ public class ChatHandler {
             ServerPlayer player = event.getPlayer();
             if (player == null) return;
 
-            UUID playerUUID = getUUIDReflectively(player);
-            if (playerUUID == null) {
-                // 备选：通过玩家名查询
-                String playerName = player.getName().getString();
-                User user = LuckPermsProvider.get().getUserManager().getUser(playerName);
-                if (user != null) applyPrefix(event, player, user);
-                return;
+            // 方法1：尝试直接用 player.getUUID()
+            UUID playerUUID = null;
+            try {
+                playerUUID = player.getUUID();
+            } catch (NoSuchMethodError e) {
+                // 方法2：通过反射获取 uuid 字段
+                try {
+                    Field field = player.getClass().getSuperclass().getSuperclass().getDeclaredField("uuid");
+                    field.setAccessible(true);
+                    playerUUID = (UUID) field.get(player);
+                } catch (Exception ex) {
+                    // 方法3：通过玩家名查询（最后的备选）
+                    String playerName = player.getName().getString();
+                    User user = LuckPermsProvider.get().getUserManager().getUser(playerName);
+                    if (user != null) {
+                        applyPrefix(event, player, user);
+                    }
+                    return;
+                }
             }
 
+            if (playerUUID == null) return;
             User user = LuckPermsProvider.get().getUserManager().getUser(playerUUID);
-            if (user != null) applyPrefix(event, player, user);
+            if (user == null) return;
+
+            applyPrefix(event, player, user);
         } catch (Exception e) {
-            // 静默失败
+            // 静默失败，确保聊天不崩溃
         }
     }
 
@@ -51,27 +66,5 @@ public class ChatHandler {
 
             event.setMessage(finalMsg);
         } catch (Exception ignored) {}
-    }
-
-    private UUID getUUIDReflectively(ServerPlayer player) {
-        try {
-            return player.getUUID();
-        } catch (NoSuchMethodError e1) {
-            try {
-                Field field = player.getClass().getSuperclass().getSuperclass().getDeclaredField("uuid");
-                field.setAccessible(true);
-                return (UUID) field.get(player);
-            } catch (Exception e2) {
-                try {
-                    Object profile = player.getClass().getMethod("getGameProfile").invoke(player);
-                    if (profile != null) {
-                        Field idField = profile.getClass().getDeclaredField("id");
-                        idField.setAccessible(true);
-                        return (UUID) idField.get(profile);
-                    }
-                } catch (Exception ignored) {}
-                return null;
-            }
-        }
     }
 }
