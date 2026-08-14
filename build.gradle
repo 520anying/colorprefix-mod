@@ -20,6 +20,17 @@ archivesBaseName = 'colorprefix'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
 minecraft {
     mappings channel: 'official', version: '1.19.2'
     runs {
@@ -54,15 +65,10 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
 }
 
-// 自定义打包任务
-tasks.register('customJar', Jar) {
-    archiveBaseName.set('colorprefix')
-    archiveVersion.set('1.0.0')
-    // 使用 sourceSets.main.output 确保包含所有编译后的 class 文件
-    from sourceSets.main.output
-    // 包含资源文件
-    from sourceSets.main.resources
+jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from sourceSets.main.output
+    from sourceSets.main.resources
     manifest {
         attributes([
             "Specification-Title": "colorprefix",
@@ -76,5 +82,6 @@ tasks.register('customJar', Jar) {
     }
 }
 
-// 确保 build 任务执行 customJar
-tasks.build.dependsOn tasks.customJar
+reobf {
+    jar {}
+}
