@@ -54,13 +54,19 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
 }
 
-// 直接指定 class 文件和资源文件的位置
+// 显示编译详细信息，便于排查错误
+compileJava {
+    options.compilerArgs << '-Xlint:all'
+    options.encoding = 'UTF-8'
+}
+
+// 打包任务：直接指定 class 文件和资源文件的路径
 jar {
     // 从编译输出目录获取 class 文件
     from file('build/classes/java/main')
-    // 从资源目录获取 mods.toml 等文件
+    // 从资源目录获取 mods.toml 等
     from file('src/main/resources')
-    // 处理重复文件
+    // 处理可能重复的文件
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     
     manifest {
@@ -74,4 +80,9 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+}
+
+// 确保 reobfJar 使用我们配置的 jar 任务
+reobf {
+    jar {}
 }
