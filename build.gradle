@@ -67,7 +67,8 @@ dependencies {
 
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from sourceSets.main.output
+    from sourceSets.main.output.classesDirs
+    from sourceSets.main.resources
     manifest {
         attributes([
             "Specification-Title": "colorprefix",
