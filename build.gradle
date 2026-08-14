@@ -54,8 +54,11 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
 }
 
-// 这个任务会把源码和资源打包进 jar
+// 配置 jar 任务，确保包含编译后的 .class 文件
 jar {
+    from sourceSets.main.output
+    from sourceSets.main.resources
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes([
             "Specification-Title": "colorprefix",
@@ -67,14 +70,9 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-    // 明确包含编译后的 class 文件和资源文件
-    from sourceSets.main.output
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-// 确保 reobfJar 使用的是我们生成的 jar
+// 配置 reobfJar 任务，确保它基于 jar 任务生成
 reobf {
-    jar {
-        // 默认使用 jar 任务的输出
-    }
+    jar {}
 }
