@@ -19,8 +19,8 @@ public class ChatHandler {
             ServerPlayer player = event.getPlayer();
             if (player == null) return;
 
-            // 1.19.2 中获取 UUID 的正确方式
-            User user = LuckPermsProvider.get().getUserManager().getUser(player.getGameProfile().getId());
+            // 使用 player.getUUID()（从 Entity 继承的方法）
+            User user = LuckPermsProvider.get().getUserManager().getUser(player.getUUID());
             if (user == null) return;
 
             String prefix = user.getCachedData().getMetaData().getPrefix();
@@ -34,7 +34,7 @@ public class ChatHandler {
 
             event.setMessage(finalMsg);
         } catch (Exception e) {
-            // 静默失败，不影响聊天
+            // 静默失败
         }
     }
 }
