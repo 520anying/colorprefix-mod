@@ -33,6 +33,13 @@ jobs:
     - name: List build/libs contents
       run: ls -la build/libs/
     
+    - name: List class files
+      run: |
+        echo "=== build/classes/java/main contents ==="
+        ls -la build/classes/java/main/ || echo "目录不存在"
+        echo "=== find all .class files ==="
+        find . -name "*.class" | head -20
+    
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
       with:
