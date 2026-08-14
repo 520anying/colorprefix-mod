@@ -40,10 +40,8 @@ jobs:
     - name: Create mod JAR
       run: |
         mkdir -p build/libs
-        cd build/classes/java/main
-        jar cf ../../../libs/colorprefix-1.0.0.jar .
-        cd ../../../src/main/resources
-        jar uf ../../../build/libs/colorprefix-1.0.0.jar .
+        JAR_PATH="$(pwd)/build/libs/colorprefix-1.0.0.jar"
+        jar cf "$JAR_PATH" -C "$(pwd)/build/classes/java/main" . -C "$(pwd)/src/main/resources" .
     
     - name: List build/libs contents
       run: ls -la build/libs/
