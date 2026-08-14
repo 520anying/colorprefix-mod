@@ -33,8 +33,9 @@ jobs:
     - name: Create mod JAR
       run: |
         mkdir -p build/libs
-        (cd build/classes/java/main && zip -r ../../../libs/colorprefix-1.0.0.jar .)
-        (cd src/main/resources && zip -u ../../build/libs/colorprefix-1.0.0.jar .)
+        JAR_PATH="$(pwd)/build/libs/colorprefix-1.0.0.jar"
+        (cd build/classes/java/main && zip -r "$JAR_PATH" .)
+        (cd src/main/resources && zip -u "$JAR_PATH" .)
     
     - name: List build/libs contents
       run: ls -la build/libs/
