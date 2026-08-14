@@ -66,6 +66,8 @@ dependencies {
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from sourceSets.main.output
     manifest {
         attributes([
             "Specification-Title": "colorprefix",
@@ -77,5 +79,4 @@ jar {
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-    // 注意：这里不再添加 from sourceSets.main.resources，因为默认已包含
 }
