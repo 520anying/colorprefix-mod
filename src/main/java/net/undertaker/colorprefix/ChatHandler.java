@@ -9,8 +9,6 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.UUID;
-
 public class ChatHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -21,30 +19,8 @@ public class ChatHandler {
             ServerPlayer player = event.getPlayer();
             if (player == null) return;
 
-            // 尝试多种方式获取 UUID（兼容不同映射版本）
-            UUID playerUUID = null;
-            try {
-                // 方式1：直接 getUUID()（标准）
-                playerUUID = player.getUUID();
-            } catch (NoSuchMethodError e1) {
-                try {
-                    // 方式2：getUniqueID()（旧版本）
-                    playerUUID = player.getUniqueID();
-                } catch (NoSuchMethodError e2) {
-                    try {
-                        // 方式3：通过 GameProfile
-                        playerUUID = player.getGameProfile().getId();
-                    } catch (NoSuchMethodError e3) {
-                        // 所有方式都失败，则通过玩家名查询（不推荐但作为最后的备选）
-                        // 这里我们直接返回，避免聊天崩溃
-                        return;
-                    }
-                }
-            }
-
-            if (playerUUID == null) return;
-
-            User user = LuckPermsProvider.get().getUserManager().getUser(playerUUID);
+            // 使用标准的 getUUID() 方法（从 Entity 继承）
+            User user = LuckPermsProvider.get().getUserManager().getUser(player.getUUID());
             if (user == null) return;
 
             String prefix = user.getCachedData().getMetaData().getPrefix();
